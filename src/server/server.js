@@ -15,10 +15,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //routes
-app.get('/api/v1/endpoints', apiRouter);
-app.get('/api/v1/patients', patientRouter);
-app.get('/api/v1/providers', providerRouter);
-app.get('/api/v1/appointments', apptRouter);
+app.use('/api/v1/endpoints', apiRouter);
+app.use('/api/v1/patients', patientRouter);
+app.use('/api/v1/providers', providerRouter);
+app.use('/api/v1/appointments', apptRouter);
 
 //static handling for FULL BUILD (dev uses vite proxy server)
 if (process.env.NODE.ENV !== 'dev') {
@@ -33,7 +33,7 @@ app.get('/', (_req, res) => {
 //Route error handler
 app.use((req, res) => {
   console.log('Bad incoming request from ' + req.originalUrl);
-  res.status(404).send('This page does not exist.');
+  res.status(404).send('Oops! This page does not exist.');
 });
 
 //Global error handler
@@ -49,8 +49,10 @@ app.use((err, _req, res, _next) => {
   return res.status(errorObj.status).json(errorObj.message);
 });
 
-app.listen(PORT, () => {
-  console.log(`Listening on port ${PORT}`);
-});
+if (import.meta.env.PROD) {
+  app.listen(PORT, () => {
+    console.log(`Listening on port ${PORT}`);
+  });
+}
 
-export default app;
+export const viteNodeApp = app;

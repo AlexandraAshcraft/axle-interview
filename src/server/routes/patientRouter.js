@@ -3,20 +3,32 @@ import patientController from '../controllers/patientController';
 
 const patientRouter = express.Router();
 
-patientRouter.get('/', async (req, res) => {
-  return res.status(200).json(res.locals);
+patientRouter.get('/', patientController.getAllPatients, async (req, res) => {
+  return res.status(200).json(res.locals.patient);
 });
-patientRouter.get('/:id', async (req, res) => {
-  return res.status(200).json(res.locals);
+patientRouter.get(
+  '/:id',
+  patientController.getPatientById,
+  async (req, res) => {
+    return res.status(200).json(res.locals.patient);
+  },
+);
+patientRouter.post('/', patientController.createPatient, async (req, res) => {
+  return res.status(200).json(res.locals.newPatient);
 });
-patientRouter.post('/', async (req, res) => {
-  return res.status(200).json(res.locals);
-});
-patientRouter.delete('/:id', async (req, res) => {
-  return res.status(200).json(res.locals);
-});
-patientRouter.patch('/:id', async (req, res) => {
-  return res.status(200).json(res.locals);
-});
+patientRouter.delete(
+  '/:id',
+  patientController.deletePatient,
+  async (req, res) => {
+    return res.status(200).json(res.locals.deletedPatient);
+  },
+);
+patientRouter.patch(
+  '/:id',
+  patientController.modifyPatient,
+  async (req, res) => {
+    return res.status(200).json(res.locals.updatedPatient);
+  },
+);
 
 export default patientRouter;

@@ -3,20 +3,28 @@ import apptController from '../controllers/apptController';
 
 const apptRouter = express.Router();
 
-apptRouter.get('/', async (req, res) => {
-  return res.status(200).json(res.locals);
+apptRouter.get(
+  '/',
+  apptController.getAllAppointmentsByDate,
+  async (req, res) => {
+    return res.status(200).json(res.locals.allAppointmentsByDate);
+  },
+);
+apptRouter.get('/:id', apptController.getAppointmentById, async (req, res) => {
+  return res.status(200).json(res.locals.appointment);
 });
-apptRouter.get('/:id', async (req, res) => {
-  return res.status(200).json(res.locals);
+apptRouter.post('/', apptController.createAppointment, async (req, res) => {
+  return res.status(200).json(res.locals.newAppointment);
 });
-apptRouter.post('/', async (req, res) => {
-  return res.status(200).json(res.locals);
-});
-apptRouter.delete('/:id', async (req, res) => {
-  return res.status(200).json(res.locals);
-});
-apptRouter.patch('/:id', async (req, res) => {
-  return res.status(200).json(res.locals);
+apptRouter.delete(
+  '/:id',
+  apptController.deleteAppointment,
+  async (req, res) => {
+    return res.status(200).json(res.locals.deletedAppointment);
+  },
+);
+apptRouter.patch('/:id', apptController.modifyAppointment, async (req, res) => {
+  return res.status(200).json(res.locals.updatedAppointment);
 });
 
 export default apptRouter;
