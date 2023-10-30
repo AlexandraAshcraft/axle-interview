@@ -6,6 +6,9 @@ const PORT = process.env.PORT || 3000;
 
 //import routers
 import apiRouter from './routes/apiRouter';
+import patientRouter from './routes/patientRouter';
+import providerRouter from './routes/providerRouter';
+import apptRouter from './routes/apptRouter';
 
 //convert incoming requests to JSON
 app.use(express.json());
@@ -13,6 +16,9 @@ app.use(express.urlencoded({ extended: true }));
 
 //routes
 app.get('/api/v1/endpoints', apiRouter);
+app.get('/api/v1/patients', patientRouter);
+app.get('/api/v1/providers', providerRouter);
+app.get('/api/v1/appointments', apptRouter);
 
 //static handling for FULL BUILD (dev uses vite proxy server)
 if (process.env.NODE.ENV !== 'dev') {
