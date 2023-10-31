@@ -11,7 +11,7 @@ providerRouter.get(
   },
 );
 providerRouter.get(
-  '/:id',
+  '/:provider_id',
   providerController.getProviderById,
   async (req, res) => {
     return res.status(200).json(res.locals.provider);
@@ -25,14 +25,14 @@ providerRouter.post(
   },
 );
 providerRouter.delete(
-  '/:id',
+  '/:provider_id',
   providerController.deleteProvider,
   async (req, res) => {
     return res.status(200).json(res.locals.deletedProvider);
   },
 );
 providerRouter.patch(
-  '/:id',
+  '/:provider_id',
   providerController.modifyProvider,
   async (req, res) => {
     return res.status(200).json(res.locals.updatedProvider);

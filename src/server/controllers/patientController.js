@@ -33,14 +33,15 @@ patientController.createPatient = async (req, res, next) => {
           'Invalid request, all fields are required to create a patient in the database.',
       });
 
+    //create unique identifier from phone and last name
     const patient_id = last_name + phone;
 
     const queryStr = `INSERT INTO patients VALUES ('${patient_id}', '${first_name}', '${last_name}', '${date_of_birth}', '${street_address}', '${city}', '${state}', '${zipcode}', '${phone}', '${insurance_provider}');`;
 
-    const newPatient = await db.query(queryStr);
-    console.log('returned database data', newPatient);
+    //query database
+    await db.query(queryStr);
 
-    res.locals.newPatient = newPatient;
+    res.locals.newPatient = 'Patient added to database.';
     return next();
   } catch (error) {
     return next({
@@ -56,21 +57,11 @@ patientController.createPatient = async (req, res, next) => {
 
 patientController.deletePatient = async (req, res, next) => {
   try {
-    const { patient_id } = req.body;
-    if (!patient_id)
-      return next({
-        log: 'Error in patientController deletePatient. Invalid request.',
-        status: 400,
-        message: {
-          err: 'Invalid request: Please provide a patient identifier for the patient you wish to delete.',
-        },
-      });
+    const { patient_id } = req.params;
 
-    const deletedPatient = await db.query(
-      `DELETE FROM patients WHERE patient_id = '${patient_id}';`,
-    );
+    await db.query(`DELETE FROM patients WHERE patient_id = '${patient_id}';`);
 
-    res.locals.deletedPatient = 'Patient deleted.';
+    res.locals.deletedPatient = 'Patient deleted from database.';
     next();
   } catch (error) {
     return next({
@@ -85,46 +76,31 @@ patientController.deletePatient = async (req, res, next) => {
 };
 patientController.modifyPatient = async (req, res, next) => {
   try {
-    const updates = {
-      patient_id: req.body.patient_id,
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      date_of_birth: req.body.date_of_birth,
-      street_address: req.body.street_address,
-      city: req.body.city,
-      state: req.body.state,
-      zipcode: req.body.zipcode,
-      phone: req.body.phone,
-      insurance_provider: req.body.insurance_provider,
-    };
-    if (!updates[patient_id])
+    const { patient_id } = req.params;
+    if (!req.body)
       return next({
-        log: 'Error in patientController modifyPatient. Invalid request, must include patient identifier.',
+        log: 'Error in patientController modifyPatient. Invalid request, must include modifications to patient.',
         status: 400,
         message:
           'Invalid request: Must include patient identifier to modify the patient in the database.',
       });
 
-    const updatedAttributes = Object.entries().filter(
-      (key, value) => key !== null && key !== undefined,
-    );
-    console.log('updatedAttributes', updatedAttributes);
+    //filter out the patientId to get an array of the attributes being modified
+    const attributesToUpdate = Object.entries(req.body);
 
-    const queryStr = '';
+    //generates query string from req body
+    let queryStr = attributesToUpdate
+      .map(([key, value]) => `${key} = '${value}', `)
+      .join('');
 
-    //builds columns and updated values for query string
-    updatedAttributes.forEach(attribute => {
-      queryStr + `${attribute[0]} = '${attribute[1]}',`;
-    });
+    //removes extra space and comma at the end
+    queryStr = queryStr.slice(0, -2);
 
-    //removes comma at the end
-    queryStr = queryStr.slice(-1);
-
-    const updatedPatient = await db.query(
-      `UPDATE patients SET ${queryStr} WHERE patient_id = '${req.body.patient_id}';`,
+    await db.query(
+      `UPDATE patients SET ${queryStr} WHERE patient_id = '${patient_id}';`,
     );
 
-    res.locals.updatedPatient = updatedPatient;
+    res.locals.updatedPatient = 'Patient updated in database.';
     return next();
   } catch (error) {
     return next({
@@ -140,19 +116,13 @@ patientController.modifyPatient = async (req, res, next) => {
 
 patientController.getPatientById = async (req, res, next) => {
   try {
-    const { patient_id } = req.body;
-    if (!patient_id)
-      return next({
-        log: 'Error in patientController getPatientById. Invalid request.',
-        status: 400,
-        message: { err: 'Invalid request: Please include patient identifier.' },
-      });
+    const { patient_id } = req.params;
 
     const patient = await db.query(
       `SELECT * FROM patients WHERE patient_id = '${patient_id}';`,
     );
 
-    res.locals.patient = patient;
+    res.locals.patient = patient.rows[0];
     next();
   } catch (error) {
     return next({
@@ -168,8 +138,7 @@ patientController.getPatientById = async (req, res, next) => {
 patientController.getAllPatients = async (_req, res, next) => {
   try {
     const allPatients = await db.query(`SELECT * FROM patients;`);
-
-    res.locals.allPatients = allPatients;
+    res.locals.allPatients = allPatients.rows;
     return next();
   } catch (error) {
     return next({
@@ -179,24 +148,6 @@ patientController.getAllPatients = async (_req, res, next) => {
       },
       status: 500,
       message: { err: 'Could not fetch patients from database.' },
-    });
-  }
-};
-
-patientController.fetchData = async (req, res, next) => {
-  try {
-    const data = await fetch('');
-    const parsedData = data.map();
-    res.locals.data = parsedData;
-    return next();
-  } catch (error) {
-    return next({
-      log: 'Error caught in patientController fetchData',
-      error,
-      status: 500,
-      message: {
-        err: 'An error occurred when fetching data from the database.',
-      },
     });
   }
 };

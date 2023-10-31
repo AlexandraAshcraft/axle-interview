@@ -7,38 +7,56 @@ apptRouter.get('/', apptController.getAppointmentsByDate, async (req, res) => {
   return res.status(200).json(res.locals.appointmentsByDate);
 });
 apptRouter.get(
-  '/:apptId',
+  '/:appointment_id',
   apptController.getAppointmentById,
   async (req, res) => {
     return res.status(200).json(res.locals.appointment);
   },
 );
 apptRouter.get(
-  '/patient/:patientId',
+  '/patient/:patient_id',
   apptController.getAppointmentsByPatient,
   async (req, res) => {
     return res.status(200).json(res.locals.patientAppointments);
   },
 );
 apptRouter.get(
-  '/provider/:providerId',
-  apptController.getProviderAppointmentsByDate,
+  '/provider/:provider_id',
+  apptController.getAppointmentsByProvider,
   async (req, res) => {
-    return res.status(200).json(res.locals.providerAppointmentsByDate);
+    return res.status(200).json(res.locals.providerAppointments);
   },
 );
+apptRouter.get(
+  '/date/:date',
+  apptController.getAppointmentsByDate,
+  async (req, res) => {
+    return res.status(200).json(res.locals.appointmentsByDate);
+  },
+);
+
+apptRouter.get(
+  '/date/:start_date/:end_date',
+  apptController.getAppointmentsByDateRange,
+  async (req, res) => {
+    return res.status(200).json(res.locals.AppointmentsByDateRange);
+  },
+);
+
+
 apptRouter.post('/', apptController.createAppointment, async (req, res) => {
   return res.status(200).json(res.locals.newAppointment);
 });
+
 apptRouter.delete(
-  '/:apptId',
+  '/:appointment_id',
   apptController.deleteAppointment,
   async (req, res) => {
     return res.status(200).json(res.locals.deletedAppointment);
   },
 );
 apptRouter.patch(
-  '/:apptId',
+  '/:appointment_id',
   apptController.modifyAppointment,
   async (req, res) => {
     return res.status(200).json(res.locals.updatedAppointment);

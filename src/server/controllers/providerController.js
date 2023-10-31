@@ -1,4 +1,4 @@
-const { db } = require('../models/sqlModel');
+const db = require('../models/sqlModel');
 
 const providerController = {};
 
@@ -33,11 +33,12 @@ providerController.createProvider = async (req, res, next) => {
     }
     const provider_id = last_name + phone;
 
-    const newProvider = await db.query(
-      `INSERT INTO providers VALUES ('${provider_id}', '${first_name}', '${last_name}', '${specialty}', '${street_address}', '${city}', '${state}', '${zipcode}', '${phone}');`,
-    );
+    const queryStr = `INSERT INTO providers VALUES ('${provider_id}', '${first_name}', '${last_name}', '${specialty}', '${street_address}', '${city}', '${state}', '${zipcode}', '${phone}');`;
 
-    res.locals.newProvider = newProvider;
+    //query database
+    await db.query(queryStr);
+
+    res.locals.newProvider = 'Provider added to database.';
     return next();
   } catch (error) {
     return next({
@@ -53,7 +54,7 @@ providerController.createProvider = async (req, res, next) => {
 
 providerController.deleteProvider = async (req, res, next) => {
   try {
-    const { provider_id } = req.body;
+    const { provider_id } = req.query;
     if (!provider_id)
       return next({
         log: 'Error in providerController deleteProvider. Invalid request.',
@@ -63,7 +64,7 @@ providerController.deleteProvider = async (req, res, next) => {
         },
       });
 
-    const deletedProvider = await db.query(
+    await db.query(
       `DELETE FROM providers WHERE provider_id = '${provider_id}';`,
     );
 
@@ -80,47 +81,33 @@ providerController.deleteProvider = async (req, res, next) => {
     });
   }
 };
+
 providerController.modifyProvider = async (req, res, next) => {
   try {
-    const updates = {
-      provider_id: req.body.provider_id,
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      specialty: req.body.specialty,
-      street_address: req.body.street_address,
-      city: req.body.city,
-      state: req.body.state,
-      zipcode: req.body.zipcode,
-      phone: req.body.phone,
-    };
-    if (!updates[provider_id])
+    const { provider_id } = req.params;
+    if (!req.body)
       return next({
-        log: 'Error in providerController modifyProvider. Invalid request, must include provider identifier.',
+        log: 'Error in providerController modifyProvider. Invalid request, must include modifications to provider.',
         status: 400,
         message:
           'Invalid request: Must include provider identifier to modify the provider in the database.',
       });
 
-    const updatedAttributes = Object.entries().filter(
-      (key, value) => key !== null && key !== undefined,
-    );
-    console.log('updatedAttributes', updatedAttributes);
-
-    const queryStr = '';
+    const attributesToUpdate = Object.entries(req.body);
 
     //builds columns and updated values for query string
-    updatedAttributes.forEach(attribute => {
-      queryStr + `${attribute[0]} = '${attribute[1]}',`;
-    });
+    let queryStr = attributesToUpdate
+      .map(([key, value]) => `${key} = '${value}', `)
+      .join('');
 
     //removes comma at the end
-    queryStr = queryStr.slice(-1);
+    queryStr = queryStr.slice(0, -2);
 
-    const updatedProvider = await db.query(
-      `UPDATE providers SET ${queryStr} WHERE provider_id = '${updates.provider_id}';`,
+    await db.query(
+      `UPDATE providers SET ${queryStr} WHERE provider_id = '${provider_id}';`,
     );
 
-    res.locals.updatedProvider = updatedProvider;
+    res.locals.updatedProvider = 'Provider updated in database.';
     return next();
   } catch (error) {
     return next({
@@ -136,21 +123,13 @@ providerController.modifyProvider = async (req, res, next) => {
 
 providerController.getProviderById = async (req, res, next) => {
   try {
-    const { provider_id } = req.body;
-    if (!provider_id)
-      return next({
-        log: 'Error in providerController getProviderById. Invalid request.',
-        status: 400,
-        message: {
-          err: 'Invalid request: Please include provider identifier.',
-        },
-      });
+    const { provider_id } = req.params;
 
     const provider = await db.query(
       `SELECT * FROM providers WHERE provider_id = '${provider_id}';`,
     );
 
-    res.locals.provider = provider;
+    res.locals.provider = provider.rows;
     next();
   } catch (error) {
     return next({
@@ -163,11 +142,11 @@ providerController.getProviderById = async (req, res, next) => {
     });
   }
 };
+
 providerController.getAllProviders = async (_req, res, next) => {
   try {
     const allProviders = await db.query(`SELECT * FROM providers;`);
-
-    res.locals.allProviders = allProviders;
+    res.locals.allProviders = allProviders.rows;
     return next();
   } catch (error) {
     return next({
@@ -180,23 +159,4 @@ providerController.getAllProviders = async (_req, res, next) => {
     });
   }
 };
-
-providerController.fetchData = async (req, res, next) => {
-  try {
-    const data = await fetch('');
-    const parsedData = data.map();
-    res.locals.data = parsedData;
-    return next();
-  } catch (error) {
-    return next({
-      log: 'Error caught in providerController fetchData',
-      error,
-      status: 500,
-      message: {
-        err: 'An error occurred when fetching data from the database.',
-      },
-    });
-  }
-};
-
 module.exports = providerController;

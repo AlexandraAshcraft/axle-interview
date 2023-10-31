@@ -9,8 +9,7 @@
     zipcode int NOT NULL, 
     phone int NOT NULL, 
     insurance_provider varchar NOT NULL, 
-    PRIMARY KEY (patient_id));
-);`;
+    PRIMARY KEY (patient_id));`;
 
 `CREATE TABLE providers (
     provider_id varchar NOT NULL, 
@@ -20,22 +19,20 @@
     street_address varchar NOT NULL, 
     city varchar NOT NULL, 
     state varchar NOT NULL, 
-    zipcode int NOT NULL, 
+    zipcode int NOT NULL,
     phone int NOT NULL, 
-    PRIMARY KEY (provider_id));
-);`;
+    PRIMARY KEY (provider_id));`;
 
 `CREATE TABLE appointments (
     appointment_id varchar NOT NULL,
     patient_id varchar NOT NULL references patients(patient_id),
-    provider_id varchar NOT NUL references providers(provider_id), 
+    provider_id varchar NOT NULL references providers(provider_id), 
     date date NOT NULL, 
     start_time time NOT NULL, 
     end_time time NOT NULL, 
     type varchar NOT NULL,
     status varchar NOT NULL, 
-    PRIMARY KEY (appointment_id));
-);`;
+    PRIMARY KEY (appointment_id));`;
 
 `ALTER TABLE table_name (
     RENAME TO new_table_name,

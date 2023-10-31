@@ -1,4 +1,4 @@
-const { db } = require('../models/sqlModel');
+const db = require('../models/sqlModel');
 
 const apiController = {};
 
