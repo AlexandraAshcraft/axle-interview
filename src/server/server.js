@@ -1,14 +1,18 @@
-const express = require('express');
-const path = require('path');
+import express from 'express';
+import path from 'path';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 //require routers
-const apiRouter = require('./routes/apiRouter');
-const patientRouter = require('./routes/patientRouter');
-const providerRouter = require('./routes/providerRouter');
-const apptRouter = require('./routes/apptRouter');
+//import apiRouter from './routes/apiRouter';
+import patientRouter from './routes/patientRouter';
+import providerRouter from './routes/providerRouter';
+import apptRouter from './routes/apptRouter';
+// const apiRouter = require('./routes/apiRouter');
+// const patientRouter = require('./routes/patientRouter');
+// const providerRouter = require('./routes/providerRouter');
+// const apptRouter = require('./routes/apptRouter');
 
 //convert incoming requests to JSON
 app.use(express.json());

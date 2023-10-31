@@ -1,36 +1,42 @@
-import { useEffect, useState } from 'react';
+//import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
+//import { useQuery, useMutation } from '@tanstack/react-query';
 
-export const newPatientForm = () => {
-  const [formData, setFormData] = useState({
-    first_name: '',
-    last_name: '',
-    date_of_birth: null,
-    street_address: '',
-    city: '',
-    state: '',
-    zipcode: null,
-    phone: null,
-    insurance_provider: null,
-  });
+export const NewPatientForm = () => {
+  //   const [formData, setFormData] = useState({
+  //     first_name: '',
+  //     last_name: '',
+  //     date_of_birth: null,
+  //     street_address: '',
+  //     city: '',
+  //     state: '',
+  //     zipcode: null,
+  //     phone: null,
+  //     insurance_provider: null,
+  //   });
 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  
-  const submitForm = async(formData) => {
-    const formData = await fetch('/api/v1/patients', {
-        method: 'POST',
 
+  const submitForm = async formData => {
+    console.log(formData);
+    const data = await fetch('/api/v1/patients', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(formData),
     })
-
-    reset();
+      .then(data => console.log(data))
+      .catch(error => console.log(error));
   };
 
   return (
     <div className='form' id='new-patient-form'>
+      <h3>Add Patient:</h3>
       <form onSubmit={handleSubmit(submitForm)}>
         <label htmlFor='first_name'>First Name:</label>
         <input
@@ -105,7 +111,15 @@ export const newPatientForm = () => {
         />
         {errors.city && <p>{errors.city.message}</p>}
         <label htmlFor='state'></label>
-        <select name='state' id='state'>
+        <select
+          name='state'
+          id='state'
+          {...register('state', {
+            required: {
+              value: true,
+              message: 'This field is required.',
+            },
+          })}>
           <option value='AL'>AL</option>
           <option value='AK'>AK</option>
           <option value='AZ'>AZ</option>
@@ -160,7 +174,7 @@ export const newPatientForm = () => {
         {errors.state && <p>{errors.state.message}</p>}
         <label htmlFor='zipcode'>Zipcode:</label>
         <input
-          {...register('city', {
+          {...register('zipcode', {
             required: {
               value: true,
               message: 'This field is required.',
@@ -199,15 +213,15 @@ export const newPatientForm = () => {
             },
           })}
           id='insurance_provider'>
-          <option value='Aetna'>Aetna:</option>
-          <option value='Anthem'>Anthem:</option>
+          <option value='Aetna'>Aetna</option>
+          <option value='Anthem'>Anthem</option>
           <option value='Blue Cross Blue Shield'>
             Blue Cross Blue Shield:
           </option>
-          <option value='Cigna'>Cigna:</option>
-          <option value='Kaiser Permanente'>Kaiser Permanente:</option>
-          <option value='Medicare'>Medicare:</option>
-          <option value='UnitedHealth Group'>UnitedHealth Group:</option>
+          <option value='Cigna'>Cigna</option>
+          <option value='Kaiser Permanente'>Kaiser Permanente</option>
+          <option value='Medicare'>Medicare</option>
+          <option value='UnitedHealth Group'>UnitedHealth Group</option>
         </select>
         {errors.insurance_provider && (
           <p>{errors.insurance_provider.message}</p>

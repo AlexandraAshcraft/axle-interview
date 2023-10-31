@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import TestContent from '../components/TestContent';
+import { NewPatientForm } from '../components/NewPatientForm';
 
 export default function MainContainer() {
-  const [count, setCount] = useState(0);
-
   return (
     <div className='main-container'>
-      <TestContent />
+      <NewPatientForm />
     </div>
   );
 }

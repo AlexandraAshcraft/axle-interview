@@ -1,9 +1,10 @@
-const db = require('../models/sqlModel');
+import db from '../models/sqlModel';
 
 const patientController = {};
 
 patientController.createPatient = async (req, res, next) => {
   try {
+    console.log('req body', req.body);
     const {
       first_name,
       last_name,
@@ -152,4 +153,4 @@ patientController.getAllPatients = async (_req, res, next) => {
   }
 };
 
-module.exports = patientController;
+export default patientController;
