@@ -1,5 +1,5 @@
-const db = require('../models/sqlModel');
-const crypto = require('crypto');
+import db from '../models/sqlModel.js';
+import crypto from 'crypto';
 
 const apptController = {};
 
@@ -273,4 +273,4 @@ apptController.getAppointmentsByDateRange = async (req, res, next) => {
 //   }
 // };
 
-module.exports = apptController;
+export default apptController;

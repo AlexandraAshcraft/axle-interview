@@ -1,7 +1,7 @@
 // const express = require('express');
 // const patientController = require('../controllers/patientController');
 import express from 'express';
-import patientController from '../controllers/patientController';
+import patientController from '../controllers/patientController.js';
 
 const patientRouter = express.Router();
 

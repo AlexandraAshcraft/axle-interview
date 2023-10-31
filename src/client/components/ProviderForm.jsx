@@ -2,19 +2,7 @@
 import { useForm } from 'react-hook-form';
 //import { useQuery, useMutation } from '@tanstack/react-query';
 
-export const NewPatientForm = () => {
-  //   const [formData, setFormData] = useState({
-  //     first_name: '',
-  //     last_name: '',
-  //     date_of_birth: null,
-  //     street_address: '',
-  //     city: '',
-  //     state: '',
-  //     zipcode: null,
-  //     phone: null,
-  //     insurance_provider: null,
-  //   });
-
+export const ProviderForm = () => {
   const {
     register,
     handleSubmit,
@@ -23,7 +11,7 @@ export const NewPatientForm = () => {
 
   const submitForm = async formData => {
     console.log(formData);
-    const data = await fetch('/api/v1/patients', {
+    const data = await fetch('/api/v1/providers', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -36,7 +24,7 @@ export const NewPatientForm = () => {
 
   return (
     <div className='form' id='new-patient-form'>
-      <h3>Add Patient:</h3>
+      <h3>Add Provider:</h3>
       <form onSubmit={handleSubmit(submitForm)}>
         <label htmlFor='first_name'>First Name:</label>
         <input
@@ -48,7 +36,7 @@ export const NewPatientForm = () => {
             maxLength: 25,
             pattern: /^[A-Za-z]+$/i,
           })}
-          id='first_name'
+          id='provider-first_name'
           type='text'
           placeholder='John'
         />
@@ -63,25 +51,21 @@ export const NewPatientForm = () => {
             maxLength: 25,
             pattern: /^[A-Za-z]+$/i,
           })}
-          id='last_name'
+          id='provider-last_name'
           type='text'
           placeholder='Doe'
         />
         {errors.last_name && <p>{errors.last_name.message}</p>}
-        <label htmlFor='date_of_birth'>Date of Birth:</label>
-        <input
-          {...register('date_of_birth', {
-            required: {
-              value: true,
-              message: 'This field is required.',
-            },
-          })}
-          id='date_of_birth'
-          type='date'
-          default={Date.now()}
-          max={Date.now()}
-        />
-        {errors.date_of_birth && <p>{errors.date_of_birth.message}</p>}
+        <label htmlFor='specialty'>Specialty:</label>
+        <select {...register('specialty')} id='provider-specialty'>
+          <option value='Vaccinations'>Vaccinations</option>
+          <option value='Bloodwork'>Bloodwork</option>
+          <option value='Physical Therapy'>Physical Therapy</option>
+          <option value='Occupational Therapy'>Occupational Therapy</option>
+          <option value='Primary Care'>Primary Care</option>
+          <option value='Dialysis'>Dialysis</option>
+        </select>
+        {errors.specialty && <p>{errors.specialty.message}</p>}
         <label htmlFor='street_address'>Street Address:</label>
         <input
           {...register('street_address', {
@@ -90,7 +74,7 @@ export const NewPatientForm = () => {
               message: 'This field is required.',
             },
           })}
-          id='street_address'
+          id='provider-street_address'
           type='text'
           placeholder='123 Main Street, Apt 101'
         />
@@ -105,21 +89,13 @@ export const NewPatientForm = () => {
             maxLength: 25,
             pattern: /^[A-Za-z]+$/i,
           })}
-          id='city'
+          id='provider-city'
           type='text'
           placeholder='New York City'
         />
         {errors.city && <p>{errors.city.message}</p>}
         <label htmlFor='state'></label>
-        <select
-          name='state'
-          id='state'
-          {...register('state', {
-            required: {
-              value: true,
-              message: 'This field is required.',
-            },
-          })}>
+        <select id='provider-state' {...register('state')}>
           <option value='AL'>AL</option>
           <option value='AK'>AK</option>
           <option value='AZ'>AZ</option>
@@ -183,7 +159,7 @@ export const NewPatientForm = () => {
             maxLength: 5,
             pattern: /^[0-9]+$/i,
           })}
-          id='zipcode'
+          id='provider-zipcode'
           type='text'
           placeholder='10001'
         />
@@ -199,33 +175,11 @@ export const NewPatientForm = () => {
             maxLength: 10,
             pattern: /^[0-9]+$/i,
           })}
-          id='phone'
+          id='provider-phone'
           type='number'
           placeholder='5551234567'
         />
         {errors.phone && <p>{errors.phone.message}</p>}
-        <label htmlFor='insurance_provider'>Insurance Provider:</label>
-        <select
-          {...register('insurance_provider', {
-            required: {
-              value: true,
-              message: 'This field is required.',
-            },
-          })}
-          id='insurance_provider'>
-          <option value='Aetna'>Aetna</option>
-          <option value='Anthem'>Anthem</option>
-          <option value='Blue Cross Blue Shield'>
-            Blue Cross Blue Shield:
-          </option>
-          <option value='Cigna'>Cigna</option>
-          <option value='Kaiser Permanente'>Kaiser Permanente</option>
-          <option value='Medicare'>Medicare</option>
-          <option value='UnitedHealth Group'>UnitedHealth Group</option>
-        </select>
-        {errors.insurance_provider && (
-          <p>{errors.insurance_provider.message}</p>
-        )}
         <button type='submit'>Submit</button>
       </form>
     </div>

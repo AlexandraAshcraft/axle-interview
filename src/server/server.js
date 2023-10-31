@@ -1,14 +1,18 @@
 import express from 'express';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 //require routers
 //import apiRouter from './routes/apiRouter';
-import patientRouter from './routes/patientRouter';
-import providerRouter from './routes/providerRouter';
-import apptRouter from './routes/apptRouter';
+import patientRouter from './routes/patientRouter.js';
+import providerRouter from './routes/providerRouter.js';
+import apptRouter from './routes/apptRouter.js';
 // const apiRouter = require('./routes/apiRouter');
 // const patientRouter = require('./routes/patientRouter');
 // const providerRouter = require('./routes/providerRouter');
@@ -57,4 +61,4 @@ app.listen(PORT, () => {
   console.log(`Listening on port ${PORT}`);
 });
 
-module.exports = app;
+export default app;

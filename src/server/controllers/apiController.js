@@ -1,4 +1,4 @@
-const db = require('../models/sqlModel');
+import db from '../models/sqlModel.js';
 
 const apiController = {};
 
@@ -20,4 +20,4 @@ apiController.fetchData = async (req, res, next) => {
   }
 };
 
-module.exports = apiController;
+export default apiController;

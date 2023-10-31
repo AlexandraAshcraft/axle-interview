@@ -1,5 +1,7 @@
-const express = require('express');
-const apptController = require('../controllers/apptController');
+// const express = require('express');
+// const apptController = require('../controllers/apptController');
+import express from 'express';
+import apptController from '../controllers/apptController.js';
 
 const apptRouter = express.Router();
 
@@ -43,7 +45,6 @@ apptRouter.get(
   },
 );
 
-
 apptRouter.post('/', apptController.createAppointment, async (req, res) => {
   return res.status(200).json(res.locals.newAppointment);
 });
@@ -63,4 +64,4 @@ apptRouter.patch(
   },
 );
 
-module.exports = apptRouter;
+export default apptRouter;

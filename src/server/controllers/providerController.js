@@ -1,4 +1,4 @@
-const db = require('../models/sqlModel');
+import db from '../models/sqlModel.js';
 
 const providerController = {};
 
@@ -159,4 +159,4 @@ providerController.getAllProviders = async (_req, res, next) => {
     });
   }
 };
-module.exports = providerController;
+export default providerController;

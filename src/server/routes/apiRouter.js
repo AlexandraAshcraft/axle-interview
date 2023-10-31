@@ -1,5 +1,7 @@
-const express = require('express');
-const apiController = require('../controllers/apiController');
+import express from 'express';
+import apiController from '../controllers/apiController.js';
+// const express = require('express');
+// const apiController = require('../controllers/apiController');
 
 const apiRouter = express.Router();
 
@@ -19,4 +21,4 @@ apiRouter.patch('/:id', async (req, res) => {
   return res.status(200).json(res.locals);
 });
 
-module.exports = apiRouter;
+export default apiRouter;

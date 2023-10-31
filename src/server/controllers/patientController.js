@@ -1,4 +1,4 @@
-import db from '../models/sqlModel';
+import db from '../models/sqlModel.js';
 
 const patientController = {};
 
