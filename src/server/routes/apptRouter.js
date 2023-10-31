@@ -1,30 +1,48 @@
-import express from 'express';
-import apptController from '../controllers/apptController';
+const express = require('express');
+const apptController = require('../controllers/apptController');
 
 const apptRouter = express.Router();
 
+apptRouter.get('/', apptController.getAppointmentsByDate, async (req, res) => {
+  return res.status(200).json(res.locals.appointmentsByDate);
+});
 apptRouter.get(
-  '/',
-  apptController.getAllAppointmentsByDate,
+  '/:apptId',
+  apptController.getAppointmentById,
   async (req, res) => {
-    return res.status(200).json(res.locals.allAppointmentsByDate);
+    return res.status(200).json(res.locals.appointment);
   },
 );
-apptRouter.get('/:id', apptController.getAppointmentById, async (req, res) => {
-  return res.status(200).json(res.locals.appointment);
-});
+apptRouter.get(
+  '/patient/:patientId',
+  apptController.getAppointmentsByPatient,
+  async (req, res) => {
+    return res.status(200).json(res.locals.patientAppointments);
+  },
+);
+apptRouter.get(
+  '/provider/:providerId',
+  apptController.getProviderAppointmentsByDate,
+  async (req, res) => {
+    return res.status(200).json(res.locals.providerAppointmentsByDate);
+  },
+);
 apptRouter.post('/', apptController.createAppointment, async (req, res) => {
   return res.status(200).json(res.locals.newAppointment);
 });
 apptRouter.delete(
-  '/:id',
+  '/:apptId',
   apptController.deleteAppointment,
   async (req, res) => {
     return res.status(200).json(res.locals.deletedAppointment);
   },
 );
-apptRouter.patch('/:id', apptController.modifyAppointment, async (req, res) => {
-  return res.status(200).json(res.locals.updatedAppointment);
-});
+apptRouter.patch(
+  '/:apptId',
+  apptController.modifyAppointment,
+  async (req, res) => {
+    return res.status(200).json(res.locals.updatedAppointment);
+  },
+);
 
-export default apptRouter;
+module.exports = apptRouter;

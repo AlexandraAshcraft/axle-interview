@@ -1,4 +1,4 @@
-import { mongoose } from 'mongoose';
+const { mongoose } = require('mongoose');
 
 const MONGO_URI = process.env.MONGO_URI;
 
@@ -15,4 +15,6 @@ const Schema = mongoose.Schema;
 
 const examplesSchema = new Schema({});
 
-export const Example = mongoose.model('example', examplesSchema);
+const Example = mongoose.model('example', examplesSchema);
+
+module.exports = Example;

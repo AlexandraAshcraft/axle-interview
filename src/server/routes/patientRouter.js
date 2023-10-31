@@ -1,5 +1,5 @@
-import express from 'express';
-import patientController from '../controllers/patientController';
+const express = require('express');
+const patientController = require('../controllers/patientController');
 
 const patientRouter = express.Router();
 
@@ -31,4 +31,4 @@ patientRouter.patch(
   },
 );
 
-export default patientRouter;
+module.exports = patientRouter;

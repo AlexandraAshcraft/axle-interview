@@ -5,11 +5,11 @@ import { VitePluginNode } from 'vite-plugin-node';
 export default defineConfig({
   plugins: [
     react(),
-    VitePluginNode({
-      adapter: 'express',
-      appPath: 'src/client/index.jsx',
-      exportName: 'viteNodeApp',
-    }),
+    // VitePluginNode({
+    //   adapter: 'express',
+    //   appPath: 'src/client/index.jsx',
+    //   exportName: 'viteNodeApp',
+    // }),
   ],
   server: {
     proxy: {

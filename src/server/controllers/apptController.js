@@ -1,10 +1,8 @@
-import { query } from 'express';
-import { db } from '../models/sqlModel';
+const { db } = require('../models/sqlModel');
 
 const apptController = {};
 
 apptController.createAppointment = async (req, res, next) => {
-  'inside appt controller';
   try {
     const {
       patient_id,
@@ -34,16 +32,7 @@ apptController.createAppointment = async (req, res, next) => {
     const appointment_id = date + start_time + provider_id;
 
     const newAppointment = await db.query(
-      `INSERT INTO appointments VALUES (${
-        (appointment_id,
-        patient_id,
-        provider_id,
-        date,
-        start_time,
-        end_time,
-        type,
-        status)
-      });`,
+      `INSERT INTO appointments VALUES ('${appointment_id}', '${patient_id}', '${provider_id}', '${date}', '${start_time}', '${end_time}', '${type}', '${status}');`,
     );
 
     res.locals.newAppointment = newAppointment;
@@ -73,7 +62,7 @@ apptController.deleteAppointment = async (req, res, next) => {
       });
 
     const deletedAppointment = await db.query(
-      `DELETE FROM appointment WHERE appointment_id = ${appointment_id};`,
+      `DELETE FROM appointment WHERE appointment_id = '${appointment_id}';`,
     );
 
     res.locals.deletedAppointment = 'Appointment deleted.';
@@ -89,6 +78,7 @@ apptController.deleteAppointment = async (req, res, next) => {
     });
   }
 };
+
 apptController.modifyAppointment = async (req, res, next) => {
   try {
     const updates = {
@@ -125,7 +115,7 @@ apptController.modifyAppointment = async (req, res, next) => {
     queryStr = queryStr.slice(-1);
 
     const updatedAppointment = await db.query(
-      `UPDATE appointments SET ${queryStr} WHERE appointment_id = ${req.body.appointment_id};`,
+      `UPDATE appointments SET ${queryStr} WHERE appointment_id = '${updates.appointment_id}';`,
     );
 
     res.locals.updatedAppointment = updatedAppointment;
@@ -155,7 +145,7 @@ apptController.getAppointmentById = async (req, res, next) => {
       });
 
     const appointment = await db.query(
-      `SELECT * FROM appointments WHERE appointment_id = ${appointment_id};`,
+      `SELECT * FROM appointments WHERE appointment_id = '${appointment_id}';`,
     );
 
     res.locals.appointment = appointment;
@@ -171,28 +161,89 @@ apptController.getAppointmentById = async (req, res, next) => {
     });
   }
 };
-apptController.getAllAppointmentsByDate = async (req, res, next) => {
+
+apptController.getAppointmentsByPatient = async (req, res, next) => {
+  try {
+    const { patient_id } = req.body;
+    if (!patient_id)
+      return next({
+        log: 'Error in apptController getAppointmentByPatient. Invalid request.',
+        status: 400,
+        message: {
+          err: 'Invalid request: Please include patient identifier to get the patient appointments.',
+        },
+      });
+
+    const patientAppointments = await db.query(
+      `SELECT * FROM appointments WHERE patient_id = '${patient_id}';`,
+    );
+
+    res.locals.patientAppointments = patientAppointments;
+    next();
+  } catch (error) {
+    return next({
+      log: {
+        'Error in apptController getAppointmentsByPatient when fetching appointments from database: ':
+          error,
+      },
+      status: 500,
+      message: { err: 'Could not fetch patient appointments from database' },
+    });
+  }
+};
+
+apptController.getAppointmentsByDate = async (req, res, next) => {
   try {
     const { start_date, end_date } = req.body;
     if (!start_date || !end_date)
       return next({
-        log: 'Error in apptController getAllAppointmentsByDate. Invalid request.',
+        log: 'Error in apptController getAppointmentsByDate. Invalid request.',
         status: 400,
         message: {
           err: 'Invalid request: Please include date range for appointments.',
         },
       });
 
-    const allAppointmentsByDate = await db.query(
-      `SELECT * FROM appointments WHERE date BETWEEN ${start_date} AND ${end_date};`,
+    const appointmentsByDate = await db.query(
+      `SELECT * FROM appointments WHERE date BETWEEN '${start_date}' AND '${end_date}';`,
     );
 
-    res.locals.allAppointmentsByDate = allAppointmentsByDate;
+    res.locals.appointmentsByDate = appointmentsByDate;
     return next();
   } catch (error) {
     return next({
       log: {
-        'Error in apptController getAllAppointments when fetching appointments from database: ':
+        'Error in apptController getAppointments when fetching appointments from database: ':
+          error,
+      },
+      status: 500,
+      message: { err: 'Could not fetch appointments from database.' },
+    });
+  }
+};
+
+apptController.getProviderAppointmentsByDate = async (req, res, next) => {
+  try {
+    const { provider_id, start_date, end_date } = req.body;
+    if (!provider_id || !start_date || !end_date)
+      return next({
+        log: 'Error in apptController getAppointmentsByDate. Invalid request.',
+        status: 400,
+        message: {
+          err: 'Invalid request: Please include provider identifier and date range for appointments.',
+        },
+      });
+
+    const providerAppointmentsByDate = await db.query(
+      `SELECT * FROM appointments WHERE provider_id = '${provider_id}' AND date BETWEEN '${start_date}' AND '${end_date}';`,
+    );
+
+    res.locals.providerAppointmentsByDate = providerAppointmentsByDate;
+    return next();
+  } catch (error) {
+    return next({
+      log: {
+        'Error in apptController getAppointments when fetching appointments from database: ':
           error,
       },
       status: 500,
@@ -219,4 +270,4 @@ apptController.fetchData = async (req, res, next) => {
   }
 };
 
-export default apptController;
+module.exports = apptController;

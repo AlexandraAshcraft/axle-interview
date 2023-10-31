@@ -1,5 +1,4 @@
-import { query } from 'express';
-import { db } from '../models/sqlModel';
+const { db } = require('../models/sqlModel');
 
 const apiController = {};
 
@@ -21,4 +20,4 @@ apiController.fetchData = async (req, res, next) => {
   }
 };
 
-export default apiController;
+module.exports = apiController;

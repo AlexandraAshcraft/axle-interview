@@ -1,21 +1,21 @@
-import express from 'express';
-import path from 'path';
+const express = require('express');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-//import routers
-import apiRouter from './routes/apiRouter';
-import patientRouter from './routes/patientRouter';
-import providerRouter from './routes/providerRouter';
-import apptRouter from './routes/apptRouter';
+//require routers
+const apiRouter = require('./routes/apiRouter');
+const patientRouter = require('./routes/patientRouter');
+const providerRouter = require('./routes/providerRouter');
+const apptRouter = require('./routes/apptRouter');
 
 //convert incoming requests to JSON
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 //routes
-app.use('/api/v1/endpoints', apiRouter);
+//app.use('/api/v1/endpoints', apiRouter);
 app.use('/api/v1/patients', patientRouter);
 app.use('/api/v1/providers', providerRouter);
 app.use('/api/v1/appointments', apptRouter);
@@ -49,10 +49,8 @@ app.use((err, _req, res, _next) => {
   return res.status(errorObj.status).json(errorObj.message);
 });
 
-if (import.meta.env.PROD) {
-  app.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`);
-  });
-}
+app.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
+});
 
-export const viteNodeApp = app;
+module.exports = app;

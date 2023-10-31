@@ -1,10 +1,8 @@
-import { query } from 'express';
-import { db } from '../models/sqlModel';
+const db = require('../models/sqlModel');
 
 const patientController = {};
 
 patientController.createPatient = async (req, res, next) => {
-    'inside patient controller';
   try {
     const {
       first_name,
@@ -37,20 +35,10 @@ patientController.createPatient = async (req, res, next) => {
 
     const patient_id = last_name + phone;
 
-    const newPatient = await db.query(
-      `INSERT INTO patients VALUES (${
-        patient_id,
-        first_name,
-        last_name,
-        date_of_birth,
-        street_address,
-        city,
-        state,
-        zipcode,
-        phone,
-        insurance_provider
-      });`,
-    );
+    const queryStr = `INSERT INTO patients VALUES ('${patient_id}', '${first_name}', '${last_name}', '${date_of_birth}', '${street_address}', '${city}', '${state}', '${zipcode}', '${phone}', '${insurance_provider}');`;
+
+    const newPatient = await db.query(queryStr);
+    console.log('returned database data', newPatient);
 
     res.locals.newPatient = newPatient;
     return next();
@@ -79,7 +67,7 @@ patientController.deletePatient = async (req, res, next) => {
       });
 
     const deletedPatient = await db.query(
-      `DELETE FROM patients WHERE patient_id = ${patient_id};`,
+      `DELETE FROM patients WHERE patient_id = '${patient_id}';`,
     );
 
     res.locals.deletedPatient = 'Patient deleted.';
@@ -133,7 +121,7 @@ patientController.modifyPatient = async (req, res, next) => {
     queryStr = queryStr.slice(-1);
 
     const updatedPatient = await db.query(
-      `UPDATE patients SET ${queryStr} WHERE patient_id = ${req.body.patient_id};`,
+      `UPDATE patients SET ${queryStr} WHERE patient_id = '${req.body.patient_id}';`,
     );
 
     res.locals.updatedPatient = updatedPatient;
@@ -161,7 +149,7 @@ patientController.getPatientById = async (req, res, next) => {
       });
 
     const patient = await db.query(
-      `SELECT * FROM patients WHERE patient_id = ${patient_id};`,
+      `SELECT * FROM patients WHERE patient_id = '${patient_id}';`,
     );
 
     res.locals.patient = patient;
@@ -213,4 +201,4 @@ patientController.fetchData = async (req, res, next) => {
   }
 };
 
-export default patientController;
+module.exports = patientController;

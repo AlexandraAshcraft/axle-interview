@@ -1,5 +1,5 @@
-import express from 'express';
-import providerController from '../controllers/providerController';
+const express = require('express');
+const providerController = require('../controllers/providerController');
 
 const providerRouter = express.Router();
 
@@ -39,4 +39,4 @@ providerRouter.patch(
   },
 );
 
-export default providerRouter;
+module.exports = providerRouter;
