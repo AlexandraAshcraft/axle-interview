@@ -22,6 +22,7 @@
     "node": "^21.1.0",
     "pg": "^8.11.3",
     "react": "^18.2.0",
+    "react-confirm-alert": "^3.0.6",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.47.0",
     "sass": "^1.69.5",

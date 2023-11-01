@@ -10,7 +10,7 @@ export const PatientForm = patient => {
 
   const handleClickOpen = () => setOpen(true);
   const handleClose = () => {
-    setOpen(false)
+    setOpen(false);
     reset();
   };
 
@@ -18,7 +18,7 @@ export const PatientForm = patient => {
     register,
     handleSubmit,
     formState: { errors },
-    reset
+    reset,
   } = useForm();
 
   const submitForm = async formData => {
@@ -33,11 +33,11 @@ export const PatientForm = patient => {
       .then(data => console.log(data))
       .catch(error => console.log(error));
 
-      return reset();
+    return reset();
   };
 
   return (
-    <div className='form' id='new-patient-form'>
+    <div className='form' id='patient-form'>
       {!patient.patient_id ? (
         <button onClick={handleClickOpen}>Add Patient</button>
       ) : (

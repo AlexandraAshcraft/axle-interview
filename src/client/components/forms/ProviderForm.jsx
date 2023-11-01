@@ -36,7 +36,7 @@ export const ProviderForm = provider => {
   };
 
   return (
-    <div className='form' id='new-patient-form'>
+    <div className='form' id='provider-form'>
       {!provider.provider_id ? (
         <button onClick={handleClickOpen}>Add Provider</button>
       ) : (

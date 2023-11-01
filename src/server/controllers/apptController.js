@@ -75,7 +75,7 @@ apptController.deleteAppointment = async (req, res, next) => {
 apptController.modifyAppointment = async (req, res, next) => {
   try {
     const { appointment_id } = req.params;
-    console.log(appointment_id);
+
     if (!req.body)
       return next({
         log: 'Error in apptController modifyAppointment. Invalid request, must include modifications to appointment.',
