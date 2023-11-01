@@ -5,7 +5,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export const PatientForm = patient => {
+export const NewPatientForm = () => {
   const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => setOpen(true);
@@ -38,17 +38,11 @@ export const PatientForm = patient => {
 
   return (
     <div className='form' id='patient-form'>
-      {!patient.patient_id ? (
-        <button onClick={handleClickOpen}>Add Patient</button>
-      ) : (
-        <button onClick={handleClickOpen}>Update Patient</button>
-      )}
+      <button onClick={handleClickOpen}>Add Patient</button>
+
       <Dialog open={open} onClose={handleClose}>
-        {!patient.patient_id ? (
-          <DialogTitle>Add Patient</DialogTitle>
-        ) : (
-          <DialogTitle>Update Patient</DialogTitle>
-        )}
+        <DialogTitle>Add Patient</DialogTitle>
+
         <DialogContent>
           <form onSubmit={handleSubmit(submitForm)}>
             <label htmlFor='first_name'>First Name:</label>

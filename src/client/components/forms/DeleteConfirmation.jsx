@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { deleteTableRow } from '../../api/tableData.js';
+import { deleteTableRow } from '../../api/tableData.jsx';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';

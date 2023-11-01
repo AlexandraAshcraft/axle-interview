@@ -1,14 +1,29 @@
 import { useEffect, useState, useContext } from 'react';
 import { StoreContext } from '../../context/globalContext';
-import { getTableData, deleteTableRow } from '../../api/tableData.js';
+import { getTableData, deleteTableRow } from '../../api/tableData.jsx';
 import { DeleteConfirmation } from '../forms/DeleteConfirmation.jsx';
+//import { ModifyAppointmentForm } from '../forms/ModifyAppointmentForm.jsx';
+import { ModifyProviderForm } from '../forms/ModifyProviderForm.jsx';
+import { ModifyPatientForm } from '../forms/ModifyPatientForm.jsx';
 
 export const Table = activeTable => {
-  //   const { allAppointments, setAllAppointments } = useContext(StoreContext);
-  //   const { allPatients, setAllPatients } = useContext(StoreContext);
-  //   const { allProviders, setAllProviders } = useContext(StoreContext);
   const [tableData, setTableData] = useState();
   const [columnNames, setColumnNames] = useState([]);
+  const {
+    currModifiedAppointment,
+    setCurrModifiedAppointment,
+    setCurrModifiedPatient,
+    setCurrModifiedProvider,
+    modifiedApptOpen,
+    setModifiedApptOpen,
+    modifiedPatientOpen,
+    setModifiedPatientOpen,
+    modifiedProviderOpen,
+    setModifiedProviderOpen,
+    deleteConfirmationOpen,
+    setDeleteConfirmationOpen,
+  } = useContext(StoreContext);
+  const type = activeTable['activeTable'];
 
   const getTableData = async activeTable => {
     await fetch(`/api/v1/${activeTable}/`, {
@@ -32,7 +47,30 @@ export const Table = activeTable => {
       .catch(error => console.log(error));
   };
 
-  const handleModify = row => {};
+  const handleClickOpen = row => {
+    if (type === 'appointments') {
+      setModifiedApptOpen(true);
+    }
+    if (type === 'patients') setModifiedPatientOpen(true);
+    if (type === 'providers') setModifiedProviderOpen(true);
+  };
+  const handleClose = () => {
+    if (type === 'appointments') setModifiedApptOpen(false);
+    if (type === 'patients') setModifiedPatientOpen(false);
+    if (type === 'providers') setModifiedProviderOpen(false);
+  };
+
+  const handleModifyRow = row => {
+    if (type === 'appointments') {
+      setCurrModifiedAppointment(row);
+    }
+    if (type === 'patients') {
+      setCurrModifiedPatient(row);
+    }
+    if (type === 'providers') {
+      setCurrModifiedProvider(row);
+    }
+  };
 
   useEffect(() => {
     const controller = new AbortController();
@@ -67,11 +105,15 @@ export const Table = activeTable => {
                     })}
                   </tr>
                   <div className='modify_and_delete'>
-                    <button onClick={() => deleteData(values[0])}>
+                    <button
+                      onClick={() => {
+                        handleModifyRow(row);
+                        handleClickOpen();
+                      }}>
                       Modify
                     </button>
-                    <button id={id}>
-                      <DeleteConfirmation activeTable={activeTable} />
+                    <button onClick={() => deleteTableRow(activeTable, id)}>
+                      Delete
                     </button>
                   </div>
                 </div>
@@ -79,6 +121,15 @@ export const Table = activeTable => {
             })
           : null}
       </table>
+      {/* {type === 'appointments' && (
+        <ModifyAppointmentForm open={modifiedApptOpen} onClose={handleClose} />
+      )} */}
+      {type === 'patients' && (
+        <ModifyPatientForm open={modifiedPatientOpen} onClose={handleClose} />
+      )}
+      {type === 'providers' && (
+        <ModifyProviderForm open={modifiedProviderOpen} onClose={handleClose} />
+      )}
     </div>
   );
 };

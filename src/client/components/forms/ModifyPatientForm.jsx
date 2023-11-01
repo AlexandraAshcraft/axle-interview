@@ -1,16 +1,19 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import { StoreContext } from '../../context/globalContext';
+import { modifyPatient } from '../../api/tableData.jsx';
 
-export const ProviderForm = provider => {
-  const [open, setOpen] = useState(false);
+export const ModifyPatientForm = patient => {
+  const { currModifiedPatient, modifiedPatientOpen, setModifiedPatientOpen } =
+    useContext(StoreContext);
 
-  const handleClickOpen = () => setOpen(true);
+  const handleClickOpen = () => setModifiedPatientOpen(true);
   const handleClose = () => {
-    setOpen(false);
+    setModifiedPatientOpen(false);
     reset();
   };
 
@@ -23,31 +26,31 @@ export const ProviderForm = provider => {
 
   const submitForm = async formData => {
     console.log(formData);
-    const data = await fetch('/api/v1/providers', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(formData),
-    })
-      .then(data => console.log(data))
-      .catch(error => console.log(error));
+
+    const updateRequestBody = {
+      first_name: formData.first_name,
+      last_name: formData.last_name,
+      date_of_birth: formData.date_of_birth,
+      street_address: formData.street_address,
+      city: formData.city,
+      state: formData.state,
+      zipcode: formData.zipcode,
+      phone: formData.phone,
+      insurance_provider: formData.insurance_provider,
+    };
+    const updates = Object.entries(updateRequestBody).filter(
+      ([key, value]) => value !== currModifiedPatient[key],
+    );
+    modifyPatient(currModifiedPatient.patient_id, updates);
+
     return reset();
   };
 
   return (
-    <div className='form' id='provider-form'>
-      {!provider.provider_id ? (
-        <button onClick={handleClickOpen}>Add Provider</button>
-      ) : (
-        <button onClick={handleClickOpen}>Update Provider</button>
-      )}
-      <Dialog open={open} onClose={handleClose}>
-        {!provider.provider_id ? (
-          <DialogTitle>Add Provider</DialogTitle>
-        ) : (
-          <DialogTitle>Update Provider</DialogTitle>
-        )}
+    <div className='form' id='patient-form'>
+      <Dialog open={modifiedPatientOpen} onClose={handleClose}>
+        <DialogTitle>Update Patient</DialogTitle>
+
         <DialogContent>
           <form onSubmit={handleSubmit(submitForm)}>
             <label htmlFor='first_name'>First Name:</label>
@@ -60,7 +63,7 @@ export const ProviderForm = provider => {
                 maxLength: 25,
                 pattern: /^[A-Za-z]+$/i,
               })}
-              id='provider-first_name'
+              id='first_name'
               type='text'
               placeholder='John'
             />
@@ -75,21 +78,25 @@ export const ProviderForm = provider => {
                 maxLength: 25,
                 pattern: /^[A-Za-z]+$/i,
               })}
-              id='provider-last_name'
+              id='last_name'
               type='text'
               placeholder='Doe'
             />
             {errors.last_name && <p>{errors.last_name.message}</p>}
-            <label htmlFor='specialty'>Specialty:</label>
-            <select {...register('specialty')} id='provider-specialty'>
-              <option value='Vaccinations'>Vaccinations</option>
-              <option value='Bloodwork'>Bloodwork</option>
-              <option value='Physical Therapy'>Physical Therapy</option>
-              <option value='Occupational Therapy'>Occupational Therapy</option>
-              <option value='Primary Care'>Primary Care</option>
-              <option value='Dialysis'>Dialysis</option>
-            </select>
-            {errors.specialty && <p>{errors.specialty.message}</p>}
+            <label htmlFor='date_of_birth'>Date of Birth:</label>
+            <input
+              {...register('date_of_birth', {
+                required: {
+                  value: true,
+                  message: 'This field is required.',
+                },
+              })}
+              id='date_of_birth'
+              type='date'
+              default={Date.now()}
+              max={Date.now()}
+            />
+            {errors.date_of_birth && <p>{errors.date_of_birth.message}</p>}
             <label htmlFor='street_address'>Street Address:</label>
             <input
               {...register('street_address', {
@@ -98,7 +105,7 @@ export const ProviderForm = provider => {
                   message: 'This field is required.',
                 },
               })}
-              id='provider-street_address'
+              id='street_address'
               type='text'
               placeholder='123 Main Street, Apt 101'
             />
@@ -113,13 +120,13 @@ export const ProviderForm = provider => {
                 maxLength: 25,
                 pattern: /^[A-Za-z]+$/i,
               })}
-              id='provider-city'
+              id='city'
               type='text'
               placeholder='New York City'
             />
             {errors.city && <p>{errors.city.message}</p>}
-            <label htmlFor='state'></label>
-            <select id='provider-state' {...register('state')}>
+            <label htmlFor='state'>State:</label>
+            <select id='state' {...register('state')}>
               <option value='AL'>AL</option>
               <option value='AK'>AK</option>
               <option value='AZ'>AZ</option>
@@ -183,7 +190,7 @@ export const ProviderForm = provider => {
                 maxLength: 5,
                 pattern: /^[0-9]+$/i,
               })}
-              id='provider-zipcode'
+              id='zipcode'
               type='text'
               placeholder='10001'
             />
@@ -201,11 +208,26 @@ export const ProviderForm = provider => {
                 maxLength: 10,
                 pattern: /^[0-9]+$/i,
               })}
-              id='provider-phone'
+              id='phone'
               type='number'
               placeholder='5551234567'
             />
             {errors.phone && <p>{errors.phone.message}</p>}
+            <label htmlFor='insurance_provider'>Insurance Provider:</label>
+            <select {...register('insurance_provider')} id='insurance_provider'>
+              <option value='Aetna'>Aetna</option>
+              <option value='Anthem'>Anthem</option>
+              <option value='Blue Cross Blue Shield'>
+                Blue Cross Blue Shield:
+              </option>
+              <option value='Cigna'>Cigna</option>
+              <option value='Kaiser Permanente'>Kaiser Permanente</option>
+              <option value='Medicare'>Medicare</option>
+              <option value='UnitedHealth Group'>UnitedHealth Group</option>
+            </select>
+            {errors.insurance_provider && (
+              <p>{errors.insurance_provider.message}</p>
+            )}
             <button type='submit'>Submit</button>
           </form>
         </DialogContent>
