@@ -132,6 +132,26 @@ apptController.getAppointmentById = async (req, res, next) => {
   }
 };
 
+apptController.getAllAppointments = async (req, res, next) => {
+  try {
+    const appointment = await db.query(`SELECT * FROM appointments;`);
+
+    res.locals.appointments = appointment.rows[0];
+
+    console.log(res.locals.appointments);
+    next();
+  } catch (error) {
+    return next({
+      log: {
+        'Error in apptController getAllAppointments when fetching appointments from database: ':
+          error,
+      },
+      status: 500,
+      message: { err: 'Could not fetch all appointments from database' },
+    });
+  }
+};
+
 apptController.getAppointmentsByPatient = async (req, res, next) => {
   try {
     const { patient_id } = req.params;

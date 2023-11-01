@@ -5,8 +5,8 @@ import apptController from '../controllers/apptController.js';
 
 const apptRouter = express.Router();
 
-apptRouter.get('/', apptController.getAppointmentsByDate, async (req, res) => {
-  return res.status(200).json(res.locals.appointmentsByDate);
+apptRouter.get('/', apptController.getAllAppointments, async (req, res) => {
+  return res.status(200).json(res.locals.appointments);
 });
 apptRouter.get(
   '/:appointment_id',
@@ -30,7 +30,14 @@ apptRouter.get(
   },
 );
 apptRouter.get(
-  '/date/:date',
+  '/date',
+  apptController.getAppointmentsByDate,
+  async (req, res) => {
+    return res.status(200).json(res.locals.appointmentsByDate);
+  },
+);
+apptRouter.get(
+  '/daterange/:date',
   apptController.getAppointmentsByDate,
   async (req, res) => {
     return res.status(200).json(res.locals.appointmentsByDate);

@@ -6,7 +6,7 @@ import patientController from '../controllers/patientController.js';
 const patientRouter = express.Router();
 
 patientRouter.get('/', patientController.getAllPatients, async (req, res) => {
-  return res.status(200).json(res.locals.patient);
+  return res.status(200).json(res.locals.allPatients);
 });
 
 patientRouter.get(

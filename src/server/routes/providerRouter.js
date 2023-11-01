@@ -9,7 +9,7 @@ providerRouter.get(
   '/',
   providerController.getAllProviders,
   async (req, res) => {
-    return res.status(200).json(res.locals.providers);
+    return res.status(200).json(res.locals.allProviders);
   },
 );
 providerRouter.get(

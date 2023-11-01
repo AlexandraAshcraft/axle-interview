@@ -140,6 +140,7 @@ patientController.getAllPatients = async (_req, res, next) => {
   try {
     const allPatients = await db.query(`SELECT * FROM patients;`);
     res.locals.allPatients = allPatients.rows;
+    console.log(res.locals.allPatients);
     return next();
   } catch (error) {
     return next({

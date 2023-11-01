@@ -147,6 +147,7 @@ providerController.getAllProviders = async (_req, res, next) => {
   try {
     const allProviders = await db.query(`SELECT * FROM providers;`);
     res.locals.allProviders = allProviders.rows;
+    console.log(res.locals.allProviders)
     return next();
   } catch (error) {
     return next({
