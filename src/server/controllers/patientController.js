@@ -7,7 +7,14 @@ patientController.getPatientNames = async (req, res, next) => {
     const names = await db.query(
       `SELECT first_name, last_name, patient_id FROM patients`,
     );
-    res.locals.appointments['patient_names'] = names.rows;
+
+    const formatted = names.rows.map(result => {
+      return {
+        patient_name: result.first_name + ' ' + result.last_name,
+        patient_id: result.patient_id,
+      };
+    });
+    res.locals.appointments['patient_names'] = formatted;
     return next();
   } catch (error) {
     console.log(error);

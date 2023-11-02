@@ -6,28 +6,42 @@ import {
   RouterProvider,
 } from 'react-router-dom';
 
-import MainContainer from './containers/MainContainer';
-import { appointmentsLoader } from './context/loaders';
-// export default function App() {
-//   return (
-//     <>
-//       <MainContainer />
-//     </>
-//   );
-// }
+import Home from './Routes/Home.jsx';
+import * as loaders from './context/loaders.js';
+import { AppointmentTable } from './components/tables/AppointmentTable.jsx';
+import { PatientTable } from './components/tables/PatientTable.jsx';
+import { ProviderTable } from './components/tables/ProviderTable.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
       path='/'
-      element={<MainContainer />}
-      loader={appointmentsLoader}
+      element={<Home />}
+      loader={loaders.appointmentsLoader}
       id='home'
       // errorElement={<ErrorElement />}
-    ></Route>,
+    >
+      <Route
+        path='/appointments'
+        element={<AppointmentTable />}
+        id='appointments'
+      />
+      <Route
+        path='/patients'
+        element={<PatientTable />}
+        loader={loaders.patientsLoader}
+        id='patients'
+      />
+      <Route
+        path='/providers'
+        element={<ProviderTable />}
+        loader={loaders.providersLoader}
+        id='providers'
+      />
+    </Route>,
   ),
 );
 
-export default function App ()  {
+export default function App() {
   return <RouterProvider router={router} />;
-};
+}

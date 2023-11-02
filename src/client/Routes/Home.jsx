@@ -5,12 +5,21 @@ import { NewProviderForm } from '../components/forms/NewProviderForm.jsx';
 import { WeeklySchedule } from '../components/schedule/WeeklySchedule.jsx';
 //import TableContainer from './TableContainer.jsx';
 import { AppointmentTable } from '../components/tables/AppointmentTable.jsx';
-import { useRouteLoaderData } from 'react-router-dom';
+import {
+  NavLink,
+  useNavigate,
+  Outlet,
+  useRouteLoaderData,
+} from 'react-router-dom';
 
-export default function MainContainer() {
+export default function Home() {
   const appointmentData = useRouteLoaderData('home');
+  const navigate = useNavigate();
 
-  console.log(appointmentData);
+  useEffect(()=>{
+    if (window.location.pathname === '/') return navigate('/appointments')
+  })
+  
   return (
     <div className='main-container'>
       <div className='addNewButtons'>
@@ -18,8 +27,13 @@ export default function MainContainer() {
         <NewProviderForm />
         {/* <NewAppointmentForm /> */}
       </div>
-      <AppointmentTable />
-      {/* <TableContainer /> */}
+      {/* <AppointmentTable /> */}
+      <nav>
+        <NavLink to={'/appointments'}>Appointments</NavLink>
+        <NavLink to={'/patients'}>Patients</NavLink>
+        <NavLink to={'/providers'}>Providers</NavLink>
+      </nav>
+      <Outlet />
     </div>
   );
 }

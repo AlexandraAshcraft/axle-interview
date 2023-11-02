@@ -7,8 +7,13 @@ providerController.getProviderNames = async (req, res, next) => {
     const names = await db.query(
       `SELECT first_name, last_name, provider_id FROM providers`,
     );
-
-    res.locals.appointments['provider_names'] = names.rows;
+    const formatted = names.rows.map(result => {
+      return {
+        provider_name: result.first_name + ' ' + result.last_name,
+        provider_id: result.provider_id,
+      };
+    });
+    res.locals.appointments['provider_names'] = formatted;
     return next();
   } catch (error) {
     console.log(error);

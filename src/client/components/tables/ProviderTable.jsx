@@ -16,55 +16,44 @@ import {
 import { EditToolbar } from './EditToolbar.jsx';
 import { useRouteLoaderData } from 'react-router-dom';
 
-export function AppointmentTable() {
-  const AppointmentData = useRouteLoaderData('home');
+export function ProviderTable() {
+  const ProviderData = useRouteLoaderData('providers');
 
   const [rows, setRows] = useState([]);
   const [rowModesModel, setRowModesModel] = useState({});
 
   const createRows = () => {
     const rows = [];
-    if (Array.isArray(AppointmentData.appointments)) {
-      const rowsData = AppointmentData.appointments.map(appointment => {
-        const rowPatient = AppointmentData.patient_names.filter(
-          patient => patient.patient_id === appointment.patient_id,
-        )[0].patient_name;
-        const rowProvider = AppointmentData.provider_names.filter(
-          provider => provider.provider_id === appointment.provider_id,
-        )[0].provider_name;
+
+    if (Array.isArray(ProviderData)) {
+      const rowsData = ProviderData.map(provider => {
         return {
-          id: appointment.appointment_id,
-          patient_name: rowPatient,
-          type: appointment.type,
-          provider_name: rowProvider,
-          date: new Date(appointment.date),
-          start_time: appointment.start_time,
-          end_time: appointment.end_time,
+          id: provider.provider_id,
+          provider_name: provider.first_name + ' ' + provider.last_name,
+          specialty: provider.specialty,
+          street_address: provider.street_address,
+          city: provider.city,
+          state: provider.state,
+          zipcode: provider.zipcode,
+          phone: provider.phone,
         };
       });
       setRows(rowsData);
     } else {
-      const rowPatient = AppointmentData.patient_names.filter(
-        patient =>
-          patient.patient_id === AppointmentData.appointments.patient_id,
-      )[0].patient_name;
-      const rowProvider = AppointmentData.provider_names.filter(
-        provider =>
-          provider.provider_id === AppointmentData.appointments.provider_id,
-      )[0].provider_name;
-
       const row = {
-        id: AppointmentData.appointments.appointment_id,
-        patient_name: rowPatient,
-        type: AppointmentData.appointments.type,
-        provider_name: rowProvider,
-        date: new Date(AppointmentData.appointments.date),
-        start_time: AppointmentData.appointments.start_time,
-        end_time: AppointmentData.appointments.end_time,
+        id: ProviderData.provider_id,
+        provider_name: ProviderData.first_name + ' ' + ProviderData.last_name,
+        specialty: ProviderData.specialty,
+        street_address: ProviderData.street_address,
+        city: ProviderData.city,
+        state: ProviderData.state,
+        zipcode: ProviderData.zipcode,
+        phone: ProviderData.phone,
       };
       setRows([row]);
     }
   };
+
 
   useEffect(() => {
     createRows();
@@ -110,25 +99,25 @@ export function AppointmentTable() {
     setRowModesModel(newRowModesModel);
   };
 
-  const providerOptions = AppointmentData.provider_names.map(provider =>
-    provider.provider_name.toString(),
-  );
-
   const columns = [
     {
-      field: 'patient_name',
-      headerName: 'Patient',
+      field: 'provider_name',
+      headerName: 'Provider',
       width: 180,
+      align: 'left',
+      headerAlign: 'left',
       editable: true,
     },
     {
-      field: 'type',
-      headerName: 'Appointment Type',
-      width: 220,
+      field: 'specialty',
+      headerName: 'Specialty',
+      width: 180,
       editable: true,
+      align: 'left',
+      headerAlign: 'left',
       type: 'singleSelect',
       valueOptions: [
-        'Vaccination',
+        'Vaccinations',
         'Bloodwork',
         'Physical Therapy',
         'Occupational Therapy',
@@ -137,44 +126,107 @@ export function AppointmentTable() {
       ],
     },
     {
-      field: 'provider_name',
-      headerName: 'Provider',
-      width: 220,
+      field: 'street_address',
+      headerName: 'Street Address',
+      width: 180,
+      align: 'left',
+      headerAlign: 'left',
       editable: true,
-      type: 'singleSelect',
-      defaultValue: '',
-      valueOptions: providerOptions,
     },
     {
-      field: 'date',
-      headerName: 'Date',
-      type: 'date',
+      field: 'city',
+      headerName: 'City',
       width: 120,
-      editable: true,
-    },
-    {
-      field: 'start_time',
-      headerName: 'Start Time',
-      type: 'time',
-      width: 80,
       align: 'left',
       headerAlign: 'left',
       editable: true,
     },
     {
-      field: 'end_time',
-      headerName: 'End Time',
-      type: 'time',
-      width: 80,
+      field: 'state',
+      headerName: 'State',
+      width: 100,
       align: 'left',
       headerAlign: 'left',
+      type: 'singleSelect',
+      valueOptions: [
+        'AL',
+        'AK',
+        'AZ',
+        'AR',
+        'CA',
+        'CO',
+        'CT',
+        'DE',
+        'FL',
+        'GA',
+        'HI',
+        'ID',
+        'IL',
+        'IN',
+        'IA',
+        'KS',
+        'KY',
+        'LA',
+        'ME',
+        'MD',
+        'MA',
+        'MI',
+        'MN',
+        'MS',
+        'MO',
+        'MT',
+        'NE',
+        'NV',
+        'NH',
+        'NJ',
+        'NM',
+        'NY',
+        'NC',
+        'ND',
+        'OH',
+        'OK',
+        'OR',
+        'PA',
+        'RI',
+        'SC',
+        'SD',
+        'TN',
+        'TX',
+        'UT',
+        'VT',
+        'VA',
+        'WA',
+        'WV',
+        'WI',
+        'WY',
+      ],
+      editable: true,
+    },
+    {
+      field: 'zipcode',
+      headerName: 'Zip Code',
+      width: 100,
+      align: 'left',
+      headerAlign: 'left',
+      type: 'number',
+      editable: true,
+    },
+    {
+      field: 'phone',
+      headerName: 'Phone Number',
+      width: 140,
+      align: 'left',
+      headerAlign: 'left',
+      type: 'number',
       editable: true,
     },
     {
       field: 'actions',
       type: 'actions',
       headerName: 'Actions',
-      width: 100,
+      width: 180,
+      align: 'left',
+      headerAlign: 'left',
       cellClassName: 'actions',
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -219,7 +271,7 @@ export function AppointmentTable() {
   ];
 
   return (
-    AppointmentData && (
+    ProviderData && (
       <Box
         sx={{
           height: 500,
