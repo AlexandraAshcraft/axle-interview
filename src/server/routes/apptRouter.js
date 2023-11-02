@@ -2,12 +2,21 @@
 // const apptController = require('../controllers/apptController');
 import express from 'express';
 import apptController from '../controllers/apptController.js';
+import patientController from '../controllers/patientController.js';
+import providerController from '../controllers/providerController.js';
 
 const apptRouter = express.Router();
 
-apptRouter.get('/', apptController.getAllAppointments, async (req, res) => {
-  return res.status(200).json(res.locals.appointments);
-});
+apptRouter.get(
+  '/',
+  apptController.getAllAppointments,
+  patientController.getPatientNames,
+  providerController.getProviderNames,
+  async (req, res) => {
+    console.log('response', res.locals.appointments)
+    return res.status(200).json(res.locals.appointments);
+  },
+);
 apptRouter.get(
   '/:appointment_id',
   apptController.getAppointmentById,
@@ -38,7 +47,7 @@ apptRouter.get(
 );
 apptRouter.get(
   '/daterange/:date',
-  apptController.getAppointmentsByDate,
+  apptController.getAppointmentsByDateRange,
   async (req, res) => {
     return res.status(200).json(res.locals.appointmentsByDate);
   },

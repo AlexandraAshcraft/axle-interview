@@ -10,6 +10,8 @@ const __dirname = path.dirname(__filename);
 
 //require routers
 //import apiRouter from './routes/apiRouter';
+import cartRouter from './routes/cartRouter.js';
+import bookRouter from './routes/bookRouter.js';
 import patientRouter from './routes/patientRouter.js';
 import providerRouter from './routes/providerRouter.js';
 import apptRouter from './routes/apptRouter.js';
@@ -24,6 +26,8 @@ app.use(express.urlencoded({ extended: true }));
 
 //routes
 //app.use('/api/v1/endpoints', apiRouter);
+app.use('/api/v1/carts', cartRouter);
+app.use('/api/v1/books', bookRouter);
 app.use('/api/v1/patients', patientRouter);
 app.use('/api/v1/providers', providerRouter);
 app.use('/api/v1/appointments', apptRouter);

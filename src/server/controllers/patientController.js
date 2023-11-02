@@ -2,6 +2,17 @@ import db from '../models/sqlModel.js';
 
 const patientController = {};
 
+patientController.getPatientNames = async (req, res, next) => {
+  try {
+    const names = await db.query(
+      `SELECT first_name, last_name, patient_id FROM patients`,
+    );
+    res.locals.appointments['patient_names'] = names.rows;
+    return next();
+  } catch (error) {
+    console.log(error);
+  }
+};
 patientController.createPatient = async (req, res, next) => {
   try {
     console.log('req body', req.body);

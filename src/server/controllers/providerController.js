@@ -2,6 +2,18 @@ import db from '../models/sqlModel.js';
 
 const providerController = {};
 
+providerController.getProviderNames = async (req, res, next) => {
+  try {
+    const names = await db.query(
+      `SELECT first_name, last_name, provider_id FROM providers`,
+    );
+
+    res.locals.appointments['provider_names'] = names.rows;
+    return next();
+  } catch (error) {
+    console.log(error);
+  }
+};
 providerController.createProvider = async (req, res, next) => {
   try {
     const {
@@ -147,7 +159,7 @@ providerController.getAllProviders = async (_req, res, next) => {
   try {
     const allProviders = await db.query(`SELECT * FROM providers;`);
     res.locals.allProviders = allProviders.rows;
-    console.log(res.locals.allProviders)
+    console.log(res.locals.allProviders);
     return next();
   } catch (error) {
     return next({

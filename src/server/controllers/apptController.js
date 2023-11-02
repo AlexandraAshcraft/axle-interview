@@ -136,7 +136,7 @@ apptController.getAllAppointments = async (req, res, next) => {
   try {
     const appointment = await db.query(`SELECT * FROM appointments;`);
 
-    res.locals.appointments = appointment.rows[0];
+    res.locals.appointments = {appointments: appointment.rows[0]};
 
     console.log(res.locals.appointments);
     next();
