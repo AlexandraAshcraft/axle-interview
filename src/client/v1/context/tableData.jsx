@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { StoreContext } from '../context/globalContext';
+import { StoreContext } from './globalContext';
 import { Store } from '@mui/icons-material';
 
 export const getTableData = async activeTable => {

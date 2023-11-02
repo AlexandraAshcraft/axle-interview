@@ -4,8 +4,8 @@ import { useForm } from 'react-hook-form';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { StoreContext } from '../../context/globalContext';
-import { modifyPatient } from '../../api/tableData.jsx';
+import { StoreContext } from '../context/globalContext';
+import { modifyPatient } from '../context/tableData.jsx';
 
 export const ModifyPatientForm = patient => {
   const { currModifiedPatient, modifiedPatientOpen, setModifiedPatientOpen } =

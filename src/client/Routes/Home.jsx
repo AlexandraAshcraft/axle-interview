@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
-import { NewPatientForm } from '../components/forms/NewPatientForm.jsx';
-import { NewProviderForm } from '../components/forms/NewProviderForm.jsx';
+import { NewPatientForm } from '../v1/forms/NewPatientForm.jsx';
+import { NewProviderForm } from '../v1/forms/NewProviderForm.jsx';
 //import { NewAppointmentForm } from '../components/forms/NewAppointmentForm.jsx';
 import { WeeklySchedule } from '../components/schedule/WeeklySchedule.jsx';
 //import TableContainer from './TableContainer.jsx';
-import { AppointmentTable } from '../components/tables/AppointmentTable.jsx';
+import { AppointmentTable } from '../Pages/Appointments.jsx';
 import {
   NavLink,
   useNavigate,
@@ -16,10 +16,10 @@ export default function Home() {
   const appointmentData = useRouteLoaderData('home');
   const navigate = useNavigate();
 
-  useEffect(()=>{
-    if (window.location.pathname === '/') return navigate('/appointments')
-  })
-  
+  useEffect(() => {
+    if (window.location.pathname === '/') return navigate('/appointments');
+  });
+
   return (
     <div className='main-container'>
       <div className='addNewButtons'>

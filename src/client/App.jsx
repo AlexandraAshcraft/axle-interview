@@ -8,9 +8,9 @@ import {
 
 import Home from './Routes/Home.jsx';
 import * as loaders from './context/loaders.js';
-import { AppointmentTable } from './components/tables/AppointmentTable.jsx';
-import { PatientTable } from './components/tables/PatientTable.jsx';
-import { ProviderTable } from './components/tables/ProviderTable.jsx';
+import { AppointmentTable } from './Pages/Appointments.jsx';
+import { PatientTable } from './Pages/Patients.jsx';
+import { ProviderTable } from './Pages/Providers.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromElements(

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { getCurrentWeekRange } from '../utils/helperFuncs.js';
+import { getCurrentWeekRange } from '../../utils/helperFuncs.js';
 
 export const StoreContext = React.createContext({});
 

@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { StoreContext } from '../../context/globalContext';
+import { StoreContext } from '../../v1/context/globalContext';
 import { TimeSlot } from './Timeslot';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';

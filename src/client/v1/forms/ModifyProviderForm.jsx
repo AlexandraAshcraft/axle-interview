@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { StoreContext } from '../../context/globalContext';
+import { StoreContext } from '../context/globalContext';
 import { modifyProvider } from '../../api/tableData.jsx';
 
 export const ModifyProviderForm = () => {
